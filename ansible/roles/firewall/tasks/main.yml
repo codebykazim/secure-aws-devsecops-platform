@@ -1,0 +1,23 @@
+---
+- name: Ensure UFW is installed
+  apt:
+    name: ufw
+    state: present
+
+- name: Allow SSH traffic
+  ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: Allow Jenkins Web UI (Master only)
+  ufw:
+    rule: allow
+    port: '8080'
+    proto: tcp
+  when: "'jenkins_master' in group_names"
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+    policy: deny

@@ -1,0 +1,8 @@
+---
+- name: Install Java (OpenJDK 21) for Jenkins Agent
+  apt:
+    name: openjdk-21-jdk
+    state: present
+    update_cache: yes
+# Agent doesn't need the jenkins service installed, just Java.
+# Docker is already installed by the docker role.

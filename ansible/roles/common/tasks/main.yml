@@ -1,0 +1,13 @@
+---
+- name: Ensure basic packages are installed
+  apt:
+    name:
+      - curl
+      - wget
+      - git
+      - unzip
+      - software-properties-common
+      - apt-transport-https
+      - ca-certificates
+    state: present
+    update_cache: yes

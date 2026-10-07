@@ -1,0 +1,23 @@
+---
+- name: Install fail2ban
+  apt:
+    name: fail2ban
+    state: present
+
+- name: Ensure fail2ban is running
+  service:
+    name: fail2ban
+    state: started
+    enabled: yes
+
+- name: Disable root SSH login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin no'
+  notify: restart sshd
+
+- name: Ensure unattended-upgrades is installed
+  apt:
+    name: unattended-upgrades
+    state: present

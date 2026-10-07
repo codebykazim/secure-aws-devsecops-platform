@@ -1,0 +1,49 @@
+---
+- name: Install Java (OpenJDK 21) for Jenkins
+  apt:
+    name: openjdk-21-jdk
+    state: present
+    update_cache: yes
+
+- name: Make Java 21 the default java
+  shell: |
+    update-alternatives --set java /usr/lib/jvm/java-21-openjdk-amd64/bin/java
+  changed_when: false
+
+- name: Reset failed state of Jenkins service (from earlier Java 17 attempts)
+  command: systemctl reset-failed jenkins
+  changed_when: false
+  failed_when: false
+
+- name: Purge ALL leftover Jenkins apt sources and keys from earlier attempts
+  shell: |
+    rm -f /etc/apt/sources.list.d/*jenkins* /etc/apt/sources.list.d/*Jenkins*
+    rm -f /usr/share/keyrings/jenkins* /etc/apt/keyrings/jenkins* /etc/apt/trusted.gpg.d/*jenkins*
+    sed -i '/pkg.jenkins.io/d' /etc/apt/sources.list
+  changed_when: true
+
+- name: Download and de-armor Jenkins 2026 GPG key
+  shell: |
+    set -o pipefail
+    curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key | gpg --dearmor -o /usr/share/keyrings/jenkins-keyring.gpg
+    chmod 644 /usr/share/keyrings/jenkins-keyring.gpg
+  args:
+    executable: /bin/bash
+
+- name: Add Jenkins repository
+  copy:
+    dest: /etc/apt/sources.list.d/jenkins.list
+    content: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.gpg] https://pkg.jenkins.io/debian-stable binary/\n"
+    mode: "0644"
+
+- name: Install Jenkins
+  apt:
+    name: jenkins
+    state: present
+    update_cache: yes
+
+- name: Ensure Jenkins service is running and enabled
+  service:
+    name: jenkins
+    state: started
+    enabled: yes
