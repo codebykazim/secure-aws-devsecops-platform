@@ -1,5 +1,8 @@
-# Use a lightweight Node.js image
-FROM node:18-alpine
+# Use a lightweight, more recent Node.js image to fix NPM 'tar' vulnerabilities
+FROM node:20-alpine
+
+# Patch all OS-level packages (fixes libcrypto3/libssl3 vulnerabilities)
+RUN apk update && apk upgrade --no-cache
 
 # Set the working directory inside the container
 WORKDIR /usr/src/app
