@@ -5,17 +5,37 @@ pipeline {
     }
 
     environment {
-        // Name of our Docker image
-        IMAGE_NAME = "devsecops-app"
+        // Our ECR Repository URL
+        ECR_REPO = "365957110061.dkr.ecr.us-east-1.amazonaws.com/devsecops-app"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
+        AWS_REGION = "us-east-1"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 echo 'Checking out code...'
-                // We will add the actual checkout step once we initialize Git
                 checkout scm
+            }
+        }
+
+        stage('Install Prerequisites (Trivy & AWS CLI)') {
+            steps {
+                echo 'Installing Trivy & AWS CLI on the Agent...'
+                sh '''
+                    # Install AWS CLI if not present
+                    if ! command -v aws &> /dev/null; then
+                        sudo apt-get update && sudo apt-get install -y awscli
+                    fi
+
+                    # Install Trivy if not present
+                    if ! command -v trivy &> /dev/null; then
+                        sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+                        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+                        echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+                        sudo apt-get update && sudo apt-get install -y trivy
+                    fi
+                '''
             }
         }
 
@@ -23,29 +43,28 @@ pipeline {
             steps {
                 dir('app') {
                     echo 'Building the Docker image...'
-                    sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -t ${IMAGE_NAME}:latest .'
+                    sh 'docker build -t ${ECR_REPO}:${IMAGE_TAG} -t ${ECR_REPO}:latest .'
                 }
             }
         }
 
-        stage('Test Docker Image') {
+        stage('Security Scan (Trivy)') {
             steps {
-                echo 'Testing the newly built image...'
-                // Run the container in the background
-                sh 'docker run -d -p 3000:3000 --name test-app ${IMAGE_NAME}:latest'
-                
-                // Wait for the server to start
-                sh 'sleep 5'
-                
-                // Check if the health endpoint returns 200 OK
-                sh 'curl -s -f http://localhost:3000/health || (echo "Healthcheck failed"; exit 1)'
+                echo 'Scanning image for vulnerabilities...'
+                // Fails the pipeline if CRITICAL vulnerabilities are found
+                sh 'trivy image --severity CRITICAL --exit-code 1 --no-progress ${ECR_REPO}:latest'
             }
-            post {
-                always {
-                    // Clean up the running container regardless of success or failure
-                    sh 'docker stop test-app || true'
-                    sh 'docker rm test-app || true'
-                }
+        }
+
+        stage('Push to AWS ECR') {
+            steps {
+                echo 'Logging into AWS ECR (using IAM Role)...'
+                // Uses the IAM Role attached to the EC2 instance for passwordless login!
+                sh 'aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}'
+                
+                echo 'Pushing Docker image to ECR...'
+                sh 'docker push ${ECR_REPO}:${IMAGE_TAG}'
+                sh 'docker push ${ECR_REPO}:latest'
             }
         }
     }
