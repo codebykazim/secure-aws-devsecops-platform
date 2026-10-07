@@ -9,11 +9,11 @@ This checklist is used to validate the completion of each phase.
 - [ ] **Phase 5 (Jenkins):** Master and Agent connected, plugins installed.
 - [x] **Phase 6 (Docker):** App builds, Trivy scan runs, image pushed.
 - [x] **Phase 7 (CI/CD):** Pipeline triggered automatically, Quality Gate passes.
-- [ ] **Phase 8 (EKS):** App deployed, pods healthy, service accessible.
-- [ ] **Phase 9 (Monitoring):** Grafana shows data, test alert triggers.
-- [ ] **Phase 10 (Security):** SSH secured, Fail2ban running.
-- [ ] **Phase 11 (Firewall):** UFW/iptables configured, correct ports open.
-- [ ] **Phase 12 (Alerts):** Pipeline and monitoring emails received.
-- [ ] **Phase 13 (DNS):** Domain resolves to app (if applicable).
-- [ ] **Phase 14 (Incident):** Failure simulated, detected, rolled back, and RCA written.
+- [x] **Phase 8 (EKS):** App deployed, pods healthy, service accessible.
+- [x] **Phase 9 (Monitoring):** Grafana shows data, test alert triggers.
+- [x] **Phase 10 (Security):** SSH secured, Fail2ban running.
+- [x] **Phase 11 (Firewall):** UFW/iptables configured, correct ports open.
+- [x] **Phase 12 (Alerts):** Pipeline and monitoring emails received.
+- [~] **Phase 13 (DNS):** Skipped (No custom domain).
+- [x] **Phase 14 (Incident):** Failure simulated, detected, rolled back, and RCA written.
 - [ ] **Phase 15 (Final):** README complete, resources destroyed.
