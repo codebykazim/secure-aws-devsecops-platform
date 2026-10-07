@@ -136,6 +136,7 @@ resource "aws_instance" "jenkins_agent" {
   subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
   key_name               = var.key_name
+  iam_instance_profile   = aws_iam_instance_profile.jenkins_agent_profile.name
 
   root_block_device {
     volume_size = 20 # Give enough space for Docker images
