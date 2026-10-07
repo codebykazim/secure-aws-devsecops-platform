@@ -8,7 +8,7 @@ This checklist is used to validate the completion of each phase.
 - [ ] **Phase 4 (Ansible):** Playbooks run successfully and are idempotent.
 - [ ] **Phase 5 (Jenkins):** Master and Agent connected, plugins installed.
 - [x] **Phase 6 (Docker):** App builds, Trivy scan runs, image pushed.
-- [ ] **Phase 7 (CI/CD):** Pipeline triggered automatically, Quality Gate passes.
+- [x] **Phase 7 (CI/CD):** Pipeline triggered automatically, Quality Gate passes.
 - [ ] **Phase 8 (EKS):** App deployed, pods healthy, service accessible.
 - [ ] **Phase 9 (Monitoring):** Grafana shows data, test alert triggers.
 - [ ] **Phase 10 (Security):** SSH secured, Fail2ban running.
