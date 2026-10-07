@@ -73,4 +73,17 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+            mail to: 'mkaazim13@gmail.com',
+                 subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "Pipeline succeeded.\nImage: ${env.ECR_REPO}:${env.IMAGE_TAG}\nBuild: ${env.BUILD_URL}"
+        }
+        failure {
+            mail to: 'mkaazim13@gmail.com',
+                 subject: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "Pipeline failed.\nCheck the console output: ${env.BUILD_URL}console"
+        }
+    }
 }
