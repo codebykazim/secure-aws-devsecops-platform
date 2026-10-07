@@ -1,5 +1,5 @@
 # Use a lightweight, more recent Node.js image to fix NPM 'tar' vulnerabilities
-FROM node:20-alpine
+FROM node:22-alpine
 
 # Patch all OS-level packages (fixes libcrypto3/libssl3 vulnerabilities)
 RUN apk update && apk upgrade --no-cache
