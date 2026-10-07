@@ -1,7 +1,5 @@
 # 🚀 Secure AWS DevSecOps Platform
 
-![Architecture Diagram](docs/images/media_1791386406211.png) <!-- Update image name if needed -->
-
 ## 📌 Project Overview
 A fully automated, highly available, and secure DevSecOps platform deployed on AWS. This project demonstrates end-to-end continuous integration, continuous deployment (CI/CD), infrastructure as code (IaC), security scanning, and robust Kubernetes monitoring. 
 
