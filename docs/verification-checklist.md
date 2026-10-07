@@ -7,7 +7,7 @@ This checklist is used to validate the completion of each phase.
 - [ ] **Phase 3 (Linux):** Sudo works, system commands usable.
 - [ ] **Phase 4 (Ansible):** Playbooks run successfully and are idempotent.
 - [ ] **Phase 5 (Jenkins):** Master and Agent connected, plugins installed.
-- [ ] **Phase 6 (Docker):** App builds, Trivy scan runs, image pushed.
+- [x] **Phase 6 (Docker):** App builds, Trivy scan runs, image pushed.
 - [ ] **Phase 7 (CI/CD):** Pipeline triggered automatically, Quality Gate passes.
 - [ ] **Phase 8 (EKS):** App deployed, pods healthy, service accessible.
 - [ ] **Phase 9 (Monitoring):** Grafana shows data, test alert triggers.

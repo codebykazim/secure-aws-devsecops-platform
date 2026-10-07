@@ -4,6 +4,11 @@ pipeline {
         label 'docker'
     }
 
+    // Automatically trigger the pipeline on GitHub push events
+    triggers {
+        githubPush()
+    }
+
     environment {
         // Our ECR Repository URL
         ECR_REPO = "365957110061.dkr.ecr.us-east-1.amazonaws.com/devsecops-app"
