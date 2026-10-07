@@ -24,15 +24,15 @@ pipeline {
                 echo 'Installing Trivy & AWS CLI on the Agent...'
                 sh '''
                     # Install AWS CLI if not present
-                    if ! command -v aws &> /dev/null; then
+                    if ! command -v aws > /dev/null 2>&1; then
                         sudo apt-get update && sudo apt-get install -y awscli
                     fi
 
                     # Install Trivy if not present
-                    if ! command -v trivy &> /dev/null; then
+                    if ! command -v trivy > /dev/null 2>&1; then
                         sudo apt-get install -y wget apt-transport-https gnupg lsb-release
-                        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
-                        echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+                        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/trivy.gpg
+                        echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
                         sudo apt-get update && sudo apt-get install -y trivy
                     fi
                 '''
