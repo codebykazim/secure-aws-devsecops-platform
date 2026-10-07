@@ -68,7 +68,7 @@ resource "aws_eks_node_group" "main" {
   node_group_name = "devsecops-node-group"
   node_role_arn   = aws_iam_role.eks_node_role.arn
   subnet_ids      = [aws_subnet.public.id, aws_subnet.public_2.id]
-  instance_types  = ["t3.medium"]
+  instance_types  = [var.instance_type]
 
   scaling_config {
     desired_size = 2
